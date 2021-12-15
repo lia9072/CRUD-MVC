@@ -1,0 +1,160 @@
+create schema Blaze;
+use blaze;
+
+
+create table Orders(
+ID int (11) AUTO_INCREMENT,
+Consumer varchar(30) not null,
+Statuss Varchar(20) not null,
+fecha date,
+primary key (ID),
+check(Statuss in('Pendiente','Completado','Rechazado'))
+);
+
+create table Products(
+ID int (11) AUTO_INCREMENT,
+NameProduct varchar(50) not null,
+Category varchar(20) ,
+Price double,
+statusProduct varchar(20),
+primary key (ID),
+check(statusProduct in('Active','Inactive'))
+
+);
+
+create table venta (
+ID int (11) AUTO_INCREMENT,
+idProduct int,
+IDOrders int,
+primary key (ID),
+foreign key (IDOrders) references Orders(ID),
+foreign key (idProduct) references Products(ID)
+);
+
+/*-----------------creando los procedimientos almacenados Produstos--------------------------------*/
+
+
+
+-- SP : ListarProductos
+drop procedure if exists ListarProductos;
+delimiter @@
+create procedure ListarProductos()
+begin
+	select * from Products;
+end @@
+delimiter ;
+call ListarProductos();
+
+
+-- SP : BuscarProducto()
+drop procedure if exists BuscarProducto;
+delimiter @@
+create procedure BuscarProducto(IdPro int)
+begin
+	select * from Products where ID = IdPro;
+end @@
+delimiter ;
+call BuscarProducto(1);
+
+
+
+-- SP : InsertarProducto
+drop procedure if exists InsertarProducto;
+delimiter @@
+create procedure InsertarProducto(Id int,Des varchar(50),cat varchar(30),prec double,Est varchar(14))
+begin 
+	insert into Products values(Id,Des,cat,prec,Est);
+end @@
+delimiter ;
+
+call InsertarProducto (3,'leche','vegano',30,'activo');
+
+
+-- SP : ModificaProducto
+drop procedure if exists ModificaProducto;
+delimiter @@
+create procedure ModificaProducto(Idprod int,Des varchar(50),cat varchar(30),prec double,Est varchar(14))
+begin
+	update Products set Descripcion=Des,Category=cat,Price=prec,statusProduct=Est where ID = Idprod;
+end @@
+delimiter ;
+
+
+call ModificaProducto();
+
+-- SP : SuprimirProducto
+drop procedure if exists SuprimirProducto;
+delimiter @@
+create procedure SuprimirProducto(Idprod int )
+begin
+	delete from Products where ID = Idprod;
+end @@
+delimiter ;
+
+call SuprimirProducto(1);
+
+/*-----------------creando los procedimientos almacenados Orders--------------------------------*/
+
+-- SP : ListarOrders
+drop procedure if exists ListarOrders;
+delimiter @@
+create procedure ListarOrders()
+begin
+	select * from Orders;
+end @@
+delimiter ;
+call ListarOrders();
+
+
+
+-- SP : BuscarOrders()
+drop procedure if exists BuscarOrders;
+delimiter @@
+create procedure BuscarOrders(IdOrd int)
+begin
+	select * from Orders where ID = IdOrd;
+end @@
+delimiter ;
+call BuscarOrders(4);
+
+
+
+-- SP : InsertarOrders
+drop procedure if exists InsertarOrders;
+delimiter @@
+create procedure InsertarOrders(Id int ,consummer varchar(50),statuss varchar(30),fecha date)
+begin 
+	insert into Orders values(Id,consummer,statuss,fecha);
+end @@
+delimiter ;
+
+call InsertarOrders(4,'luis','pendiente','2020/03/10');
+
+
+
+-- SP : ModificaProducto
+drop procedure if exists ModificaOrders;
+delimiter @@
+create procedure ModificaOrders(IdOrders int ,consummer varchar(50),status_ varchar(30),fechaa date)
+begin
+	update Orders set consumer=consummer,Statuss=status_,fecha=fechaa where ID = IdOrders;
+end @@
+delimiter ;
+
+call ModificaOrders(4,'maria','rechazado','2020-03-10');
+
+
+-- SP : SuprimirProducto
+drop procedure if exists SuprimirOrders;
+delimiter @@
+create procedure SuprimirOrders(IdOrders int)
+begin
+	delete from Orders where ID = IdOrders;
+end @@
+delimiter ;
+
+call SuprimirOrders(1);
+
+
+
+
